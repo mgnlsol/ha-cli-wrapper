@@ -1,0 +1,12 @@
+{
+  "name": "ha-cli",
+  "version": "1.0.0",
+  "description": "Magnolia Headless Accelerator CLI Tool",
+  "main": "index.js",
+  "repository": "https://github.com/mgnlsol/ha-cli-wrapper.git",
+  "author": "Senol Tas <senol.tas@magnolia-cms.com>",
+  "license": "MIT",
+  "files": [
+    "npm/**/*"
+  ]
+}
