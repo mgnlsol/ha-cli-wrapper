@@ -13,11 +13,11 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-gnu
-            archive: zip
+            archive: tar.gz tar.xz
           - target: x86_64-unknown-linux-musl
             archive: tar.gz tar.xz
           - target: x86_64-apple-darwin
-            archive: zip
+            archive: tar.gz tar.xz
     steps:
       - uses: actions/checkout@master
       - name: Compile and release
@@ -26,3 +26,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUSTTARGET: ${{ matrix.target }}
           ARCHIVE_TYPES: ${{ matrix.archive }}
+      - name: Setup NPM Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

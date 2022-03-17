@@ -1,12 +1,29 @@
 {
-  "name": "ha-cli",
-  "version": "1.0.0",
+  "name": "@magnolia-services/ha-cli",
+  "version": "1.0.0-beta.3",
   "description": "Magnolia Headless Accelerator CLI Tool",
   "main": "index.js",
-  "repository": "https://github.com/mgnlsol/ha-cli-wrapper.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgnlsol/ha-cli-wrapper"
+  },
   "author": "Senol Tas <senol.tas@magnolia-cms.com>",
   "license": "MIT",
   "files": [
     "npm/**/*"
-  ]
+  ],
+  "bin": {
+    "ha": "./npm/run.js"
+  },
+  "binaryname": "ha-cli-wrapper",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "postinstall": "node ./npm/install.js"
+  },
+  "dependencies": {
+    "binary-install": "^0.1.1",
+    "console.table": "^0.10.0"
+  }
 }
