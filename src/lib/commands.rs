@@ -55,7 +55,7 @@ pub fn start_execute(args: &Vec<String>) {
 }
 
 pub fn call_ha(args: &Vec<String>) -> Result<CommandResult, CommandResult> {
-    call_command("has", args)
+    call_command("ha-cli", args)
 }
 
 pub fn install_ha_cli() -> Result<CommandResult, CommandResult> {
