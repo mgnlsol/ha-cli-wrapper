@@ -1,6 +1,6 @@
 {
   "name": "@magnolia-services/ha-cli",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "description": "Magnolia Headless Accelerator CLI Tool",
   "main": "index.js",
   "repository": {
@@ -20,11 +20,9 @@
     "access": "public"
   },
   "scripts": {
-    "postinstall": "node ./npm/install.js",
-    "preuninstall": "node ./npm/uninstall.js"
+    "postinstall": "node ./npm/install.js"
   },
   "dependencies": {
-    "@cloudflare/binary-install": "^0.2.0",
     "console.table": "^0.10.0"
   }
 }
