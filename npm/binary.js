@@ -34,7 +34,7 @@ const supportedPlatforms = [
         ARCHITECTURE: "x64",
         RUST_TARGET: "x86_64-apple-darwin",
         ARCHIVE_NAME: "x86_64-apple-darwin.tar.gz",
-        BINARY_NAME: "ha-cli-wrapperd"
+        BINARY_NAME: "ha-cli-wrapper"
     }
 ];
 
