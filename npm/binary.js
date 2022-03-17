@@ -1,5 +1,5 @@
 
-const { Binary } = require("binary-install");
+const { Binary } = require("@cloudflare/binary-install");
 const os = require("os");
 const cTable = require("console.table");
 
@@ -61,13 +61,13 @@ const getPlatformMetadata = () => {
 
 const getBinary = () => {
     const platformMetadata = getPlatformMetadata();
-    const url = `${repository.url}/releases/download/v${version}/${binaryname}_v${version}_${platformMetadata.ARCHIVE_NAME}`;    
-    return new Binary(platformMetadata.BINARY_NAME, url);
+    const url = `${repository.url}/releases/download/v${version}/${binaryname}_v${version}_${platformMetadata.ARCHIVE_NAME}`;
+    return new Binary(url, { name: platformMetadata.BINARY_NAME });
 };
 
 const run = () => {
     const binary = getBinary();
-    binary.run(); 
+    binary.run();
 };
 
 const install = () => {
@@ -75,7 +75,13 @@ const install = () => {
     binary.install();
 };
 
+const uninstall = () => {
+    const binary = getBinary();
+    binary.uninstall();
+};
+
 module.exports = {
     install,
-    run
+    run,
+    uninstall
 };
