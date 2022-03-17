@@ -8,7 +8,11 @@ const error = msg => {
     process.exit(1);
 };
 
-const { version, name, binaryname, repository } = require("../package.json");
+const { version, name, binaryname } = require("../package.json");
+
+const repository = {
+    url: "https://github.com/mgnlsol/ha-cli-wrapper"
+}
 
 const supportedPlatforms = [
     {
