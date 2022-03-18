@@ -1,6 +1,4 @@
-use dialoguer::Password;
-use dirs::home_dir;
-use std::env;
+use super::auth::{AuthenticationError, Credentials};
 /**
  * This file Copyright (c) 2010-2022 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
@@ -15,10 +13,11 @@ use std::env;
  * intact.
  *
  */
+use dialoguer::Password;
+use dirs::home_dir;
+use std::env;
 use std::fs::{read_to_string, OpenOptions};
 use std::io::Write;
-
-use super::auth::{AuthenticationError, Credentials};
 
 /// Prompts user for username and password credentials
 /// and is updating .npmrc file in users home directory with nexus credentials
@@ -34,10 +33,6 @@ use super::auth::{AuthenticationError, Credentials};
 /// //npm.magnolia-cms.com/repository/npm-enterprise/:always-auth=true
 /// //npm.magnolia-cms.com/repository/npm-enterprise/:_auth=YXNkZmFzZGY6YWxza2RmamFzZGY=
 /// ```
-///
-///
-///
-
 fn gather_credentials() -> Result<Credentials, AuthenticationError> {
     let npm_repo = "https://npm.magnolia-cms.com";
 
@@ -127,7 +122,7 @@ pub fn npm_login() -> Result<Credentials, AuthenticationError> {
         .unwrap();
 
     match file.write_all(npmrc.as_bytes()) {
-        Ok(_res) => println!("Successfull authenticated and system is setup"),
+        Ok(_res) => println!("Successfull authenticated and system is setup."),
         Err(error) => panic!("Error setting system up {:#?}", error),
     }
 

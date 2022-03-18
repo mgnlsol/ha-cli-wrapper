@@ -29,6 +29,18 @@ pub struct CommandResult {
     pub code: CommandResultCode,
 }
 
+#[cfg(windows)]
+pub const NPM: &'static str = "npm.cmd";
+
+#[cfg(not(windows))]
+pub const NPM: &'static str = "npm";
+
+#[cfg(windows)]
+pub const HA_CLI_CMD: &'static str = "ha-cli.cmd";
+
+#[cfg(not(windows))]
+pub const HA_CLI_CMD: &'static str = "ha-cli";
+
 pub fn start_execute(args: &[String]) {
     match call_ha(args) {
         Ok(_result) => println!(),
@@ -55,7 +67,7 @@ pub fn start_execute(args: &[String]) {
 }
 
 pub fn call_ha(args: &[String]) -> Result<CommandResult, CommandResult> {
-    call_command("ha-cli", args)
+    call_command(HA_CLI_CMD, args)
 }
 
 pub fn install_ha_cli() -> Result<CommandResult, CommandResult> {
@@ -64,7 +76,7 @@ pub fn install_ha_cli() -> Result<CommandResult, CommandResult> {
         String::from("@magnolia-dx/ha-cli"),
         String::from("-g"),
     ];
-    call_command("npm", &args)
+    call_command(NPM, &args)
 }
 
 pub fn call_command(cmd: &str, args: &[String]) -> Result<CommandResult, CommandResult> {
@@ -83,7 +95,7 @@ pub fn call_command(cmd: &str, args: &[String]) -> Result<CommandResult, Command
         },
         Err(res) => match res.kind() {
             ErrorKind::NotFound => Err(CommandResult {
-                message: format!("Command >{}< not found", cmd),
+                message: format!("Command <{}> not found", cmd),
                 code: CommandResultCode::NotInstalled,
             }),
             _ => Err(CommandResult {
