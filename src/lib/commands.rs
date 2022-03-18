@@ -29,9 +29,9 @@ pub struct CommandResult {
     pub code: CommandResultCode,
 }
 
-pub fn start_execute(args: &Vec<String>) {
-    match call_ha(&args) {
-        Ok(_result) => println!(""),
+pub fn start_execute(args: &[String]) {
+    match call_ha(args) {
+        Ok(_result) => println!(),
         Err(error) => {
             if error.code == CommandResultCode::NotInstalled {
                 let loginok = match npm_login() {
@@ -54,7 +54,7 @@ pub fn start_execute(args: &Vec<String>) {
     }
 }
 
-pub fn call_ha(args: &Vec<String>) -> Result<CommandResult, CommandResult> {
+pub fn call_ha(args: &[String]) -> Result<CommandResult, CommandResult> {
     call_command("ha-cli", args)
 }
 
@@ -67,7 +67,7 @@ pub fn install_ha_cli() -> Result<CommandResult, CommandResult> {
     call_command("npm", &args)
 }
 
-pub fn call_command(cmd: &str, args: &Vec<String>) -> Result<CommandResult, CommandResult> {
+pub fn call_command(cmd: &str, args: &[String]) -> Result<CommandResult, CommandResult> {
     let status = Command::new(cmd).args(args).status();
 
     match status {

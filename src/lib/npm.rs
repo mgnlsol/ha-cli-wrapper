@@ -1,3 +1,6 @@
+use dialoguer::Password;
+use dirs::home_dir;
+use std::env;
 /**
  * This file Copyright (c) 2010-2022 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
@@ -12,11 +15,8 @@
  * intact.
  *
  */
-use std::fs::OpenOptions;
+use std::fs::{read_to_string, OpenOptions};
 use std::io::Write;
-
-use dialoguer::Password;
-use dirs::home_dir;
 
 use super::auth::{AuthenticationError, Credentials};
 
@@ -35,8 +35,21 @@ use super::auth::{AuthenticationError, Credentials};
 /// //npm.magnolia-cms.com/repository/npm-enterprise/:_auth=YXNkZmFzZGY6YWxza2RmamFzZGY=
 /// ```
 ///
-pub fn npm_login() -> Result<Credentials, AuthenticationError> {
+///
+///
+
+fn gather_credentials() -> Result<Credentials, AuthenticationError> {
     let npm_repo = "https://npm.magnolia-cms.com";
+
+    match env::var("MGNL_HA_AUTH_TOKEN") {
+        Ok(token) => {
+            return Ok(Credentials {
+                username: "TOKEN".to_string(),
+                password: token,
+            })
+        }
+        Err(e) => println!("Couldn't read LANG ({})", e),
+    };
 
     let mut line = String::new();
     print!("Magnolia Username: ");
@@ -53,7 +66,6 @@ pub fn npm_login() -> Result<Credentials, AuthenticationError> {
         .unwrap();
 
     let result = Credentials { username, password };
-    let encodes_credentials = result.encode();
 
     let test_url = format!("{}/service/rest/v1/search", npm_repo);
 
@@ -74,21 +86,36 @@ pub fn npm_login() -> Result<Credentials, AuthenticationError> {
         });
     }
 
+    Ok(result)
+}
+
+pub fn npm_login() -> Result<Credentials, AuthenticationError> {
+    let result: Credentials = gather_credentials()?;
+    let encodes_credentials = result.encode();
+    let mut hd = home_dir().unwrap();
+    hd.push(".npmrc");
+
+    let target_path = hd.to_str().unwrap();
+
+    if npm_exists(target_path) {
+        return Ok(result);
+    }
+
     let npmrc = format!(
         r#"
+
+// Magnolia DX private repisotory
+@magnolia-dx:registry=https://npm.magnolia-cms.com/repository/npm-enterprise/
+//npm.magnolia-cms.com/repository/npm-enterprise/:always-auth=true
+//npm.magnolia-cms.com/repository/npm-enterprise/:_auth={}
 
 // Magnolia DX private repisotory
 @magnolia-ea:registry=https://npm.magnolia-cms.com/repository/npm-enterprise/
 //npm.magnolia-cms.com/repository/npm-enterprise/:always-auth=true
 //npm.magnolia-cms.com/repository/npm-enterprise/:_auth={}
 "#,
-        encodes_credentials
+        encodes_credentials, encodes_credentials
     );
-
-    let mut hd = home_dir().unwrap();
-    hd.push(".npmrc");
-
-    let target_path = hd.to_str().unwrap();
 
     println!("Updated NPM settings at {:#?}", target_path);
 
@@ -99,10 +126,27 @@ pub fn npm_login() -> Result<Credentials, AuthenticationError> {
         .open(target_path)
         .unwrap();
 
-    match file.write_all(String::from(npmrc).as_bytes()) {
+    match file.write_all(npmrc.as_bytes()) {
         Ok(_res) => println!("Successfull authenticated and system is setup"),
         Err(error) => panic!("Error setting system up {:#?}", error),
     }
 
     Ok(result)
+}
+
+fn npm_exists(npmfile: &str) -> bool {
+    println!("npm file exists");
+    let content = match read_to_string(npmfile) {
+        Ok(file_content) => file_content,
+        Err(_error) => return false,
+    };
+
+    check_string(&content, "@magnolia-dx") && check_string(&content, "@magnolia-ea")
+}
+
+fn check_string(content: &str, search_string: &str) -> bool {
+    match content.find(search_string) {
+        Some(_position) => true,
+        None => false,
+    }
 }

@@ -22,13 +22,13 @@ fn main() {
 
     let args: Vec<String> = args.drain(1..args.len()).collect();
 
-    if args.len() > 0 {
+    if !args.is_empty() {
         match args.get(0).unwrap().as_str() {
             "login" => match npm_login() {
                 Ok(auth) => println!("Your token is: {}", auth.encode()),
                 Err(error) => println!("Login failed {:#?}", error),
             },
-            "self-update" => match call_command("npm", &vec![
+            "self-update" => match call_command("npm", &[
                 String::from("update"),
                 String::from("-g"),
                 String::from("@magnolia-dx/ha-cli"),

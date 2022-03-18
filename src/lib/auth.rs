@@ -24,9 +24,13 @@ pub struct Credentials {
 impl Credentials {
     /// encode username and password in base64 string (format username:password)
     pub fn encode(&self) -> String {
+        if self.username.eq("token") {
+            return self.password.clone();
+        }
         encode(format!("{}:{}", self.username, self.password))
     }
 }
+
 
 impl fmt::Display for Credentials {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
