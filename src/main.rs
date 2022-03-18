@@ -20,7 +20,11 @@ use std::env;
 fn main() {
     let mut args: Vec<String> = env::args().collect();
 
-    let args: Vec<String> = args.drain(1..args.len()).collect();
+    args = args.drain(1..args.len()).collect();
+
+    if args.is_empty() {
+        args = vec![String::from("help")];
+    }
 
     if !args.is_empty() {
         match args.get(0).unwrap().as_str() {

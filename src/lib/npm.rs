@@ -48,11 +48,11 @@ fn gather_credentials() -> Result<Credentials, AuthenticationError> {
                 password: token,
             })
         }
-        Err(e) => println!("Couldn't read LANG ({})", e),
+        Err(_e) => println!(" HA has to download all depenencies first.\n Please login withyour Nexus / Magnolia DX Core Credentials."),
     };
 
     let mut line = String::new();
-    print!("Magnolia Username: ");
+    print!(" Magnolia Username: ");
     std::io::stdout().flush().unwrap();
     std::io::stdin()
         .read_line(&mut line)
@@ -61,7 +61,7 @@ fn gather_credentials() -> Result<Credentials, AuthenticationError> {
     let username = line.trim().to_string();
 
     let password = Password::new()
-        .with_prompt("Magnolia Password")
+        .with_prompt(" Magnolia Password")
         .interact()
         .unwrap();
 
