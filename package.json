@@ -1,6 +1,6 @@
 {
   "name": "@magnolia-services/ha-cli",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0",
   "description": "Magnolia Headless Accelerator CLI Tool",
   "main": "index.js",
   "repository": {
