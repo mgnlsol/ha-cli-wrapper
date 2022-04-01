@@ -56,7 +56,10 @@ pub fn start_execute(args: &[String]) {
                     return;
                 }
                 match install_ha_cli() {
-                    Ok(_result) => println!("ha-cli installed successfully"),
+                    Ok(_result) => {
+                        println!("ha-cli installed successfully");
+                        start_execute(&args);
+                    }
                     Err(error) => println!("Couldn't install ha cli {:#?}", error.message),
                 }
             } else {

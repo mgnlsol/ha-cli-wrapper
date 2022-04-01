@@ -13,7 +13,7 @@
  *
  */
 mod lib;
-use lib::commands::{start_execute, call_command};
+use lib::commands::{call_command, start_execute};
 use lib::npm::npm_login;
 use std::env;
 
@@ -26,23 +26,22 @@ fn main() {
         args = vec![String::from("help")];
     }
 
-    if !args.is_empty() {
-        match args.get(0).unwrap().as_str() {
-            "login" => match npm_login() {
-                Ok(auth) => println!("Your token is: {}", auth.encode()),
-                Err(error) => println!("Login failed {:#?}", error),
-            },
-            "self-update" => match call_command("npm", &[
+    match args.get(0).unwrap().as_str() {
+        "login" => match npm_login() {
+            Ok(auth) => println!("Your token is: {}", auth.encode()),
+            Err(error) => println!("Login failed {:#?}", error),
+        },
+        "self-update" => match call_command(
+            "npm",
+            &[
                 String::from("update"),
                 String::from("-g"),
                 String::from("@magnolia-dx/ha-cli"),
-            ]) {
-                Ok(_res) => println!("System updated"),
-                Err(error) => println!("Login failed {:#?}", error),
-            },
-            _ => start_execute(&args),
-        }
-    } else {
-        start_execute(&args);
+            ],
+        ) {
+            Ok(_res) => println!("System updated"),
+            Err(error) => println!("Login failed {:#?}", error),
+        },
+        _ => start_execute(&args),
     }
 }

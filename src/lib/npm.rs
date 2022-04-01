@@ -39,7 +39,7 @@ fn gather_credentials() -> Result<Credentials, AuthenticationError> {
     match env::var("MGNL_HA_AUTH_TOKEN") {
         Ok(token) => {
             return Ok(Credentials {
-                username: "TOKEN".to_string(),
+                username: "token".to_string(),
                 password: token,
             })
         }
