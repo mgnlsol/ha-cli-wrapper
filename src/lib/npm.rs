@@ -28,13 +28,13 @@ use std::io::Write;
 ///
 /// # .npmrc file format
 /// ```
-/// // Magnolia DX private repisotory
+/// // Magnolia DX private repository
 /// @magnolia-ea:registry=https://npm.magnolia-cms.com/repository/npm-enterprise/
 /// //npm.magnolia-cms.com/repository/npm-enterprise/:always-auth=true
 /// //npm.magnolia-cms.com/repository/npm-enterprise/:_auth=YXNkZmFzZGY6YWxza2RmamFzZGY=
 /// ```
 fn gather_credentials() -> Result<Credentials, AuthenticationError> {
-    let npm_repo = "https://npm.magnolia-cms.com";
+    let npm_repo = "https://nexus.magnolia-cms.com";
 
     match env::var("MGNL_HA_AUTH_TOKEN") {
         Ok(token) => {
@@ -43,7 +43,7 @@ fn gather_credentials() -> Result<Credentials, AuthenticationError> {
                 password: token,
             })
         }
-        Err(_e) => println!(" HA has to download all depenencies first.\n Please login withyour Nexus / Magnolia DX Core Credentials."),
+        Err(_e) => println!(" HA has to download all dependencies first.\n Please login with your Nexus / Magnolia DX Core Credentials."),
     };
 
     let mut line = String::new();
@@ -62,7 +62,7 @@ fn gather_credentials() -> Result<Credentials, AuthenticationError> {
 
     let result = Credentials { username, password };
 
-    let test_url = format!("{}/service/rest/v1/search", npm_repo);
+    let test_url = format!("{}/repository/npm-enterprise/%40magnolia-dx/ha-cli/-/ha-cli-1.0.0.tgz", npm_repo);
 
     let client = reqwest::blocking::Client::new();
 
